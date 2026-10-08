@@ -1,5 +1,5 @@
 /* Color Time service worker — bump CACHE_VERSION when adding assets */
-const CACHE_VERSION = 'color-v3';
+const CACHE_VERSION = 'color-v4';
 const ASSETS = [
   './',
   './index.html',
@@ -7,9 +7,7 @@ const ASSETS = [
   './js/pages.js',
   './js/app.js',
   './manifest.webmanifest',
-  './icons/icon-180.png',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
+  './icons/icon.svg',
   './pages/animals/cat.svg',
   './pages/animals/dog.svg',
   './pages/animals/fish.svg',
@@ -26,13 +24,34 @@ const ASSETS = [
   './pages/objects/house.svg',
   './pages/objects/ball.svg',
   './pages/objects/rocket.svg',
-  './custom/pages.json',
-  './custom/spidey-ironman.png'
+  './custom/pages.json'
 ];
+
+// Files a custom/pages.json list needs offline: plain 'file' images or base64 text chunks ('b64').
+function customAssetUrls(list) {
+  const urls = [];
+  (list || []).forEach((p) => {
+    if (!p) return;
+    if (p.file) urls.push('./custom/' + p.file);
+    if (Array.isArray(p.b64)) p.b64.forEach((u) => urls.push('./' + u));
+    else if (p.b64 && p.parts > 0) for (let i = 0; i < p.parts; i++) urls.push('./' + p.b64 + '.' + String(i).padStart(2, '0'));
+    else if (p.b64) urls.push('./' + p.b64);
+  });
+  return urls;
+}
+function cacheCustomAssets(cache, list) {
+  return Promise.all(customAssetUrls(list).map((u) =>
+    cache.match(u).then((hit) => hit || cache.add(u)).catch(() => {})));
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_VERSION).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE_VERSION).then((cache) =>
+      cache.addAll(ASSETS)
+        .then(() => cache.match('./custom/pages.json'))
+        .then((r) => (r ? r.json() : []))
+        .then((list) => cacheCustomAssets(cache, list))
+    ).then(() => self.skipWaiting())
   );
 });
 
@@ -50,12 +69,15 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET' || !req.url.startsWith(self.location.origin)) return;
   const url = new URL(req.url);
-  const networkFirst = req.mode === 'navigate' || url.pathname.endsWith('/custom/pages.json');
+  const isPagesJson = url.pathname.endsWith('/custom/pages.json');
+  const networkFirst = req.mode === 'navigate' || isPagesJson;
 
   const fromNetwork = () => fetch(req).then((res) => {
     if (res && res.ok) {
       const clone = res.clone();
-      caches.open(CACHE_VERSION).then((c) => c.put(req, clone));
+      const json = isPagesJson ? res.clone().json().catch(() => []) : null;
+      event.waitUntil(caches.open(CACHE_VERSION).then((c) =>
+        c.put(req, clone).then(() => json && json.then((list) => cacheCustomAssets(c, list)))));
     }
     return res;
   });

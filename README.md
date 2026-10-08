@@ -13,13 +13,16 @@ Open the site in Safari (iPad/iPhone) or Chrome (Android) and use **Add to Home 
 
 ## Adding a custom page
 
-1. Add a line-art file to `custom/` (SVG, or PNG with black lines on white/transparent). For PNGs in this repo,
-   add the base64 text as `assets-b64/custom__<name>.png.b64` (`base64 -w 76 file.png > ...`); the Pages workflow decodes it.
-2. Add an entry to `custom/pages.json`: `{ "id": "my-page", "title": "Short Name", "file": "my-page.png" }`
-3. In `sw.js`, bump `CACHE_VERSION` and add `'./custom/my-page.png'` to `ASSETS`.
+1. SVG: put it in `custom/` and add `{ "id": "my-page", "title": "Short Name", "file": "my-page.svg" }` to `custom/pages.json`.
+2. PNG (black lines on white/transparent): this repo stores PNGs as base64 text, decoded in the browser.
+   Split it into chunks: `base64 -w 76 my-page.png | split -l 15 -d -a 2 - assets-b64/custom__my-page.png.b64.`
+   Then add `{ "id": "my-page", "title": "Short Name", "b64": "assets-b64/custom__my-page.png.b64", "parts": N }`
+   (N = number of chunk files). A single unsplit `.b64` file also works: omit `parts`.
+3. Bump `CACHE_VERSION` in `sw.js`. The service worker caches whatever `custom/pages.json` lists.
 
 Close every outline (gaps let the fill leak), and use thick lines.
 
 ## Deploy
 
-`.github/workflows/pages.yml` decodes `assets-b64/` into the original PNGs and publishes the site with GitHub Pages (Actions).
+Plain static files, no build step. GitHub Pages: Settings > Pages > Source: Deploy from a branch, `main`, `/ (root)`.
+`.nojekyll` makes Pages serve every file as-is.
