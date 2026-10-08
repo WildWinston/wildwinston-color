@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Body -->
+  <path d="M160 280 L160 140 Q160 80 200 50 Q240 80 240 140 L240 280 Z" fill="none" stroke="#000" stroke-width="7" stroke-linejoin="round"/>
+  <!-- Nose tip -->
+  <path d="M160 140 Q160 80 200 50 Q240 80 240 140" fill="none" stroke="#000" stroke-width="7"/>
+  <!-- Window -->
+  <circle cx="200" cy="150" r="25" fill="none" stroke="#000" stroke-width="6"/>
+  <circle cx="200" cy="150" r="12" fill="none" stroke="#000" stroke-width="4"/>
+  <!-- Body stripe -->
+  <line x1="160" y1="200" x2="240" y2="200" stroke="#000" stroke-width="5"/>
+  <line x1="160" y1="240" x2="240" y2="240" stroke="#000" stroke-width="5"/>
+  <!-- Left fin -->
+  <path d="M160 240 L100 300 L160 280 Z" fill="none" stroke="#000" stroke-width="6" stroke-linejoin="round"/>
+  <!-- Right fin -->
+  <path d="M240 240 L300 300 L240 280 Z" fill="none" stroke="#000" stroke-width="6" stroke-linejoin="round"/>
+  <!-- Flame -->
+  <path d="M175 280 Q185 330 200 360 Q215 330 225 280" fill="none" stroke="#000" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M185 280 Q195 310 200 340 Q205 310 215 280" fill="none" stroke="#000" stroke-width="4"/>
+  <!-- Stars -->
+  <circle cx="80" cy="100" r="5" fill="none" stroke="#000" stroke-width="3"/>
+  <circle cx="320" cy="120" r="6" fill="none" stroke="#000" stroke-width="3"/>
+  <circle cx="90" cy="200" r="4" fill="none" stroke="#000" stroke-width="3"/>
+  <circle cx="330" cy="220" r="5" fill="none" stroke="#000" stroke-width="3"/>
+</svg>

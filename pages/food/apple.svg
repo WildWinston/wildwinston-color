@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Apple body -->
+  <path d="M200 100 Q120 110 100 200 Q90 300 160 340 Q200 360 240 340 Q310 300 300 200 Q280 110 200 100 Z" fill="none" stroke="#000" stroke-width="7" stroke-linejoin="round"/>
+  <!-- Leaf -->
+  <path d="M200 100 Q230 60 280 70 Q250 100 200 105" fill="none" stroke="#000" stroke-width="6" stroke-linejoin="round"/>
+  <!-- Stem -->
+  <path d="M200 100 L195 70" fill="none" stroke="#000" stroke-width="6" stroke-linecap="round"/>
+  <!-- Highlight -->
+  <path d="M140 180 Q150 160 165 175" fill="none" stroke="#000" stroke-width="4" stroke-linecap="round"/>
+</svg>

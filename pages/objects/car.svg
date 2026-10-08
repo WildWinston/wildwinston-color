@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Car body bottom -->
+  <path d="M50 240 L50 280 Q50 300 70 300 L330 300 Q350 300 350 280 L350 240 Z" fill="none" stroke="#000" stroke-width="7" stroke-linejoin="round"/>
+  <!-- Car cabin / top -->
+  <path d="M90 240 L120 160 Q130 145 150 145 L260 145 Q280 145 290 160 L330 240" fill="none" stroke="#000" stroke-width="7" stroke-linejoin="round"/>
+  <!-- Window divider -->
+  <line x1="200" y1="145" x2="200" y2="240" stroke="#000" stroke-width="5"/>
+  <!-- Left window -->
+  <path d="M125 230 L145 165 L195 165 L195 230 Z" fill="none" stroke="#000" stroke-width="5"/>
+  <!-- Right window -->
+  <path d="M205 230 L205 165 L255 165 L285 230 Z" fill="none" stroke="#000" stroke-width="5"/>
+  <!-- Left wheel -->
+  <circle cx="120" cy="300" r="35" fill="none" stroke="#000" stroke-width="7"/>
+  <circle cx="120" cy="300" r="15" fill="none" stroke="#000" stroke-width="5"/>
+  <!-- Right wheel -->
+  <circle cx="290" cy="300" r="35" fill="none" stroke="#000" stroke-width="7"/>
+  <circle cx="290" cy="300" r="15" fill="none" stroke="#000" stroke-width="5"/>
+  <!-- Headlight -->
+  <circle cx="340" cy="255" r="12" fill="none" stroke="#000" stroke-width="5"/>
+  <!-- Door handle -->
+  <line x1="210" y1="250" x2="230" y2="250" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+</svg>

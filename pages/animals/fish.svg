@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Fish body -->
+  <ellipse cx="190" cy="200" rx="110" ry="70" fill="none" stroke="#000" stroke-width="7"/>
+  <!-- Tail -->
+  <path d="M80 200 L30 140 L40 200 L30 260 Z" fill="none" stroke="#000" stroke-width="7" stroke-linejoin="round"/>
+  <!-- Top fin -->
+  <path d="M150 140 Q180 90 220 135" fill="none" stroke="#000" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M150 140 L220 135" fill="none" stroke="#000" stroke-width="5"/>
+  <!-- Bottom fin -->
+  <path d="M160 260 Q180 300 210 265" fill="none" stroke="#000" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M160 260 L210 265" fill="none" stroke="#000" stroke-width="5"/>
+  <!-- Eye -->
+  <circle cx="260" cy="185" r="22" fill="none" stroke="#000" stroke-width="6"/>
+  <circle cx="265" cy="185" r="10" fill="#000"/>
+  <!-- Mouth -->
+  <path d="M290 210 Q300 220 290 230" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+  <!-- Scales / stripes -->
+  <path d="M140 170 Q160 200 140 230" fill="none" stroke="#000" stroke-width="4"/>
+  <path d="M180 160 Q200 200 180 240" fill="none" stroke="#000" stroke-width="4"/>
+  <path d="M220 165 Q235 200 220 235" fill="none" stroke="#000" stroke-width="4"/>
+  <!-- Bubbles -->
+  <circle cx="330" cy="120" r="12" fill="none" stroke="#000" stroke-width="5"/>
+  <circle cx="350" cy="90" r="8" fill="none" stroke="#000" stroke-width="4"/>
+  <circle cx="320" cy="70" r="6" fill="none" stroke="#000" stroke-width="4"/>
+</svg>

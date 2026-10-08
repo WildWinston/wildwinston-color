@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Body -->
+  <ellipse cx="200" cy="230" rx="100" ry="80" fill="none" stroke="#000" stroke-width="7"/>
+  <!-- Head -->
+  <circle cx="280" cy="160" r="55" fill="none" stroke="#000" stroke-width="7"/>
+  <!-- Ear -->
+  <ellipse cx="230" cy="150" rx="40" ry="55" fill="none" stroke="#000" stroke-width="6"/>
+  <ellipse cx="235" cy="155" rx="25" ry="35" fill="none" stroke="#000" stroke-width="4"/>
+  <!-- Trunk -->
+  <path d="M320 175 Q360 200 340 260 Q330 290 350 310" fill="none" stroke="#000" stroke-width="7" stroke-linecap="round"/>
+  <path d="M325 180 Q355 200 340 255" fill="none" stroke="#000" stroke-width="4"/>
+  <!-- Eye -->
+  <circle cx="295" cy="145" r="12" fill="none" stroke="#000" stroke-width="5"/>
+  <circle cx="297" cy="147" r="5" fill="#000"/>
+  <!-- Legs -->
+  <rect x="130" y="280" width="35" height="70" rx="8" fill="none" stroke="#000" stroke-width="6"/>
+  <rect x="180" y="290" width="35" height="60" rx="8" fill="none" stroke="#000" stroke-width="6"/>
+  <rect x="230" y="285" width="35" height="65" rx="8" fill="none" stroke="#000" stroke-width="6"/>
+  <!-- Tail -->
+  <path d="M100 220 Q60 210 50 250" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+  <path d="M50 250 L40 245 M50 250 L45 260" fill="none" stroke="#000" stroke-width="4" stroke-linecap="round"/>
+</svg>

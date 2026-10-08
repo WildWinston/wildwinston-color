@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Banana outer -->
+  <path d="M80 120 Q60 200 100 300 Q140 360 200 340 Q280 310 320 220 Q340 160 300 120 Q250 90 200 130 Q150 160 120 140 Q100 125 80 120 Z" fill="none" stroke="#000" stroke-width="7" stroke-linejoin="round"/>
+  <!-- Inner curve lines -->
+  <path d="M130 150 Q150 200 160 280" fill="none" stroke="#000" stroke-width="4"/>
+  <path d="M170 145 Q200 190 220 280" fill="none" stroke="#000" stroke-width="4"/>
+  <path d="M210 140 Q250 180 270 250" fill="none" stroke="#000" stroke-width="4"/>
+  <!-- Stem tip -->
+  <ellipse cx="85" cy="115" rx="18" ry="14" fill="none" stroke="#000" stroke-width="5" transform="rotate(-30 85 115)"/>
+</svg>
