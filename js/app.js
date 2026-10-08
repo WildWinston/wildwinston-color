@@ -365,6 +365,28 @@
     });
   }
 
+  // ---------- Page image sources ----------
+  // A page is either a plain image URL (page.file), or base64 text chunks of a PNG (page.b64),
+  // so binary art can live in the repo as plain text. Chunks are joined and turned into a
+  // data: URL, which is same-origin-safe (never taints the canvas, so flood fill works).
+  const srcCache = new Map();
+  function b64Urls(b64, parts) {
+    if (Array.isArray(b64)) return b64;
+    if (parts > 0) return Array.from({ length: parts }, (_, i) => b64 + '.' + String(i).padStart(2, '0'));
+    return [b64];
+  }
+  function resolvePageSrc(page) {
+    if (!page.b64) return Promise.resolve(page.file);
+    if (!srcCache.has(page.id)) {
+      const p = Promise.all(b64Urls(page.b64, page.parts).map((u) =>
+        fetch(u).then((r) => { if (!r.ok) throw new Error('b64 ' + u + ' ' + r.status); return r.text(); })
+      )).then((parts) => 'data:' + (page.mime || 'image/png') + ';base64,' + parts.join('').replace(/\s+/g, ''));
+      p.catch(() => srcCache.delete(page.id));
+      srcCache.set(page.id, p);
+    }
+    return srcCache.get(page.id);
+  }
+
   function loadImage(url) {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -413,7 +435,7 @@
     wallMask = null;
     setTool('fill');
     try {
-      lineImg = await loadImage(page.file);
+      lineImg = await loadImage(await resolvePageSrc(page));
       if (currentPage !== page) return;
       renderLineArt(lineImg);
       let blob = null;
@@ -533,7 +555,8 @@
       btn.className = 'thumb';
       btn.setAttribute('aria-label', page.title);
       const img = document.createElement('img');
-      img.src = page.file;
+      if (page.b64) resolvePageSrc(page).then((src) => { img.src = src; }).catch(() => {});
+      else img.src = page.file;
       img.alt = page.title;
       img.draggable = false;
       btn.appendChild(img);
@@ -706,10 +729,15 @@
       const res = await fetch('custom/pages.json', { cache: 'no-cache' });
       if (!res.ok) throw new Error('no custom');
       const list = await res.json();
-      customPages = (list || []).map((p) => ({
+      // Entry: { id, title, file } (file in custom/), or { id, title, b64, parts?, mime? } where b64 is a
+      // site-root path to base64 text (single file, or chunk prefix + parts count => prefix.00..NN, or an array).
+      customPages = (list || []).filter((p) => p && p.id && (p.file || p.b64)).map((p) => ({
         id: 'custom-' + p.id,
         title: p.title || p.id,
-        file: 'custom/' + p.file
+        file: p.file ? 'custom/' + p.file : null,
+        b64: p.b64 || null,
+        parts: p.parts || 0,
+        mime: p.mime || 'image/png'
       }));
       window.COLOR_PAGES.custom.pages = customPages;
     } catch (e) {
