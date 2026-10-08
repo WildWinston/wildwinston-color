@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Color Time" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#FF69B4" />
+  <meta name="description" content="A coloring book for kids — fun, free, offline" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <title>Color Time</title>
+</head>
+<body>
+  <!-- HOME -->
+  <div id="home">
+    <header class="home-header">
+      <span class="logo">🎨</span>
+      <h1>Color Time</h1>
+    </header>
+    <nav id="categories" class="categories" aria-label="Categories"></nav>
+    <div id="gallery" class="gallery"></div>
+  </div>
+
+  <!-- STUDIO -->
+  <div id="studio" class="hidden">
+    <div class="top-bar">
+      <button id="btnBack" class="icon-btn" aria-label="Back">🏠</button>
+      <button id="btnUndo" class="icon-btn" aria-label="Undo">↩️</button>
+      <button id="btnClear" class="icon-btn danger" aria-label="Clear">🗑️</button>
+      <button id="btnSave" class="icon-btn" aria-label="Save">💾</button>
+      <div class="tools">
+        <button class="icon-btn tool-btn active" data-tool="fill" aria-label="Fill">🪣</button>
+        <button class="icon-btn tool-btn" data-tool="draw" aria-label="Draw">✏️</button>
+        <button class="icon-btn tool-btn" data-tool="sticker" aria-label="Stickers">⭐</button>
+      </div>
+    </div>
+    <div id="canvasWrap" class="canvas-wrap">
+      <canvas id="colorCanvas"></canvas>
+      <canvas id="lineCanvas"></canvas>
+    </div>
+    <div class="bottom-bar">
+      <div class="options-row">
+        <div id="brushSizes" class="brush-sizes"></div>
+        <div id="stickerRow" class="sticker-row"></div>
+        <div id="fillHint" class="fill-hint" aria-hidden="true">👆🪣</div>
+      </div>
+      <div id="palette" class="palette"></div>
+    </div>
+  </div>
+
+  <!-- Clear confirm -->
+  <div id="confirmModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="emoji">🗑️</div>
+      <p>Clear the picture?</p>
+      <div class="modal-actions">
+        <button id="btnCancelClear" class="btn-cancel">No</button>
+        <button id="btnConfirmClear" class="btn-ok">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="js/pages.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
