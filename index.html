@@ -29,6 +29,8 @@
 
   <!-- STUDIO -->
   <div id="studio" class="hidden">
+    <div id="panelTools" class="panel panel-tools">
+    <div class="panel-clip">
     <div class="top-bar">
       <button id="btnBack" class="icon-btn" aria-label="Back">🏠</button>
       <button id="btnUndo" class="icon-btn" aria-label="Undo">↩️</button>
@@ -40,10 +42,15 @@
         <button class="icon-btn tool-btn" data-tool="sticker" aria-label="Stickers">⭐</button>
       </div>
     </div>
+    </div>
+    <button id="toggleTools" class="panel-handle" aria-controls="panelTools" aria-expanded="true" aria-label="Hide tools"><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6,15 12,9 18,15" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
     <div id="canvasWrap" class="canvas-wrap">
       <canvas id="colorCanvas"></canvas>
       <canvas id="lineCanvas"></canvas>
     </div>
+    <div id="panelColors" class="panel panel-colors">
+    <div class="panel-clip">
     <div class="bottom-bar">
       <div class="options-row">
         <div id="brushSizes" class="brush-sizes"></div>
@@ -51,6 +58,9 @@
         <div id="fillHint" class="fill-hint" aria-hidden="true">👆🪣</div>
       </div>
       <div id="palette" class="palette"></div>
+    </div>
+    </div>
+    <button id="toggleColors" class="panel-handle" aria-controls="panelColors" aria-expanded="true" aria-label="Hide colors"><span id="colorDot" class="handle-dot"></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6,15 12,9 18,15" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
   </div>
 

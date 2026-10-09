@@ -519,3 +519,119 @@ button {
 @media (orientation: landscape) and (max-height: 400px) {
   .home-header { display: none; }
 }
+
+/* ========== Collapsible panels (tools / colors) ========== */
+/* Each panel = .panel > .panel-clip > bar, plus a .panel-handle tab that hangs off the panel's inner edge
+   into the canvas area's padding (never over the picture). Collapsing slides the panel off-screen with a
+   negative margin equal to its size (--size, measured by JS); the tab then rests at the screen edge. */
+:root { --handle: 32px; --handle-len: 84px; --panel-anim: 0.28s; }
+.panel {
+  position: relative;
+  z-index: 6;
+  flex-shrink: 0;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  background: #fff;
+}
+.panel-tools { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.panel-colors { box-shadow: 0 -2px 10px rgba(0,0,0,0.06); }
+.panel.collapsed { box-shadow: none; }
+#studio { overflow: hidden; }
+.panel-clip {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.panel-clip > * { flex: 1 1 auto; min-width: 0; min-height: 0; overflow: hidden; box-shadow: none; transition: visibility 0s; }
+.panel.collapsed .panel-clip > * { visibility: hidden; transition: visibility 0s linear var(--panel-anim); }
+.panel.animating { transition: margin var(--panel-anim) ease, box-shadow var(--panel-anim) ease; }
+.panel-tools.collapsed { margin-top: calc(-1 * var(--size, 0px)); }
+.panel-colors.collapsed { margin-bottom: calc(-1 * var(--size, 0px)); }
+
+/* Canvas area keeps a gutter on the handle edges so the tabs never sit on the picture. */
+.canvas-wrap { padding: calc(var(--handle) + 4px) 8px; }
+
+.panel-handle {
+  position: absolute;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: var(--handle-len);
+  height: var(--handle);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  color: #7C5CFF;
+  box-shadow: 0 3px 8px rgba(124,92,255,0.22);
+  touch-action: manipulation;
+}
+.panel-handle:active { background: #F5F0FF; }
+.panel-tools .panel-handle { top: 100%; border-radius: 0 0 16px 16px; }
+.panel-colors .panel-handle { bottom: 100%; border-radius: 16px 16px 0 0; box-shadow: 0 -3px 8px rgba(124,92,255,0.22); }
+.panel-handle .chev { width: 26px; height: 26px; transition: transform var(--panel-anim) ease; }
+/* chevron points the way the panel will move: portrait tools up / colors down when open */
+.panel-tools .chev { transform: rotate(0deg); }
+.panel-tools.collapsed .chev { transform: rotate(180deg); }
+.panel-colors .chev { transform: rotate(180deg); }
+.panel-colors.collapsed .chev { transform: rotate(0deg); }
+.panel.collapsed .panel-handle { background: #FFF5FB; box-shadow: 0 3px 10px rgba(255,105,180,0.35); }
+
+/* current color shown on the collapsed colors tab */
+.handle-dot {
+  display: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1.5px rgba(0,0,0,0.25);
+  flex-shrink: 0;
+}
+.panel.collapsed .handle-dot { display: block; }
+.handle-dot.rainbow { background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); }
+.handle-dot.glitter { background: linear-gradient(135deg, #FF69B4, #7C5CFF, #00D4FF); }
+
+@media (orientation: landscape) {
+  .panel-tools { box-shadow: 2px 0 8px rgba(0,0,0,0.06); }
+  .panel-colors { box-shadow: -2px 0 10px rgba(0,0,0,0.06); }
+  .panel-tools.collapsed { margin-top: 0; margin-left: calc(-1 * var(--size, 0px)); }
+  .panel-colors.collapsed { margin-bottom: 0; margin-right: calc(-1 * var(--size, 0px)); }
+  .top-bar { overflow-y: auto; }
+  .canvas-wrap { padding: 8px calc(var(--handle) + 4px); }
+  .panel-handle {
+    flex-direction: column;
+    width: var(--handle);
+    height: var(--handle-len);
+    left: auto;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .panel-tools .panel-handle { left: 100%; top: 50%; border-radius: 0 16px 16px 0; box-shadow: 3px 0 8px rgba(124,92,255,0.22); }
+  .panel-colors .panel-handle { right: 100%; bottom: auto; border-radius: 16px 0 0 16px; box-shadow: -3px 0 8px rgba(124,92,255,0.22); }
+  /* landscape: tools slide left, colors slide right */
+  .panel-tools .chev { transform: rotate(-90deg); }
+  .panel-tools.collapsed .chev { transform: rotate(90deg); }
+  .panel-colors .chev { transform: rotate(90deg); }
+  .panel-colors.collapsed .chev { transform: rotate(-90deg); }
+
+  /* colors rail: brush/sticker strip separated from the colors; colors snap by whole rows when they
+     have to scroll, so a row is never left half-hidden under the strip */
+  .options-row { border-bottom: 2px solid #F3EEFA; }
+  .palette { scroll-snap-type: y mandatory; scroll-padding: 12px 0; padding-top: 12px; }
+  .swatch { scroll-snap-align: start; }
+}
+
+/* Short landscape on tablets (iPad Safari ~1024x350 .. 1180x600): a 4-column colors rail so all
+   14 colors fit without scrolling (no clipped rows). Phones keep the 3-column rail. */
+@media (orientation: landscape) and (max-height: 600px) and (min-width: 900px) {
+  .bottom-bar { width: 264px; }
+  .palette { grid-template-columns: repeat(4, 52px); gap: 10px 8px; padding: 12px 8px 8px; }
+}
+@media (orientation: landscape) and (max-height: 600px) {
+  :root { --handle: 30px; --handle-len: 80px; }
+}

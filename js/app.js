@@ -363,9 +363,12 @@
     return Math.max(MIN_PX, Math.min(MAX_PX, Math.round(shortSide * ratio)));
   }
   function sizeCanvases() {
+    // Fit the square inside the wrap's content box (its padding is the gutter for the panel tabs).
     const wrap = canvasWrap.getBoundingClientRect();
-    const pad = 16;
-    const side = Math.floor(Math.max(100, Math.min(wrap.width - pad, wrap.height - pad)));
+    const cs = getComputedStyle(canvasWrap);
+    const padX = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0);
+    const padY = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+    const side = Math.floor(Math.max(100, Math.min(wrap.width - padX, wrap.height - padY)));
     canvasDisplayW = canvasDisplayH = side;
     dpr = Math.min(window.devicePixelRatio || 1, 3);
     if (!backingPx) backingPx = chooseBackingPx();
@@ -440,6 +443,7 @@
     undoStack = [];
     homeEl.classList.add('hidden');
     studioEl.classList.remove('hidden');
+    measurePanels(); // studio was hidden (0 size) until now
     sizeCanvases();
     paintWhite();
     lineCtx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
@@ -601,6 +605,16 @@
       });
       paletteEl.appendChild(btn);
     });
+    updateColorDot();
+  }
+
+  // Current color on the collapsed colors tab.
+  function updateColorDot() {
+    const dot = document.getElementById('colorDot');
+    if (!dot) return;
+    const special = color === 'rainbow' || color === 'glitter';
+    dot.className = 'handle-dot' + (special ? ' ' + color : '');
+    dot.style.background = special ? '' : color;
   }
 
   function renderBrushSizes() {
@@ -696,6 +710,55 @@
   colorCanvas.addEventListener('contextmenu', (e) => e.preventDefault());
   document.addEventListener('contextmenu', (e) => { if (e.target.closest('#studio')) e.preventDefault(); });
 
+  // ---------- Collapsible panels (tools / colors) ----------
+  // Collapsing only changes the canvas display size (same path as rotation), so the full-res drawing
+  // and undo history are untouched. State is remembered across visits.
+  const PANELS_KEY = STORAGE_PREFIX + 'ui-panels';
+  const panelEls = { tools: document.getElementById('panelTools'), colors: document.getElementById('panelColors') };
+  const handleEls = { tools: document.getElementById('toggleTools'), colors: document.getElementById('toggleColors') };
+  const panelState = { tools: false, colors: false };
+  try {
+    const saved = JSON.parse(localStorage.getItem(PANELS_KEY) || '{}');
+    panelState.tools = saved.tools === true;
+    panelState.colors = saved.colors === true;
+  } catch (e) { /* ignore */ }
+  // Natural size of each panel along the slide axis (margins don't change offset sizes).
+  function measurePanels() {
+    const land = window.matchMedia('(orientation: landscape)').matches;
+    Object.keys(panelEls).forEach((k) => {
+      const el = panelEls[k];
+      el.style.setProperty('--size', (land ? el.offsetWidth : el.offsetHeight) + 'px');
+    });
+  }
+  function applyPanels() {
+    measurePanels();
+    Object.keys(panelEls).forEach((k) => {
+      const collapsed = panelState[k];
+      panelEls[k].classList.toggle('collapsed', collapsed);
+      handleEls[k].setAttribute('aria-expanded', String(!collapsed));
+      handleEls[k].setAttribute('aria-label', (collapsed ? 'Show ' : 'Hide ') + k);
+      const clip = panelEls[k].querySelector('.panel-clip');
+      if (collapsed) clip.setAttribute('inert', ''); else clip.removeAttribute('inert');
+    });
+  }
+  function setPanelCollapsed(k, collapsed) {
+    const el = panelEls[k];
+    el.classList.add('animating'); // slide only on a tap, never on rotation/reload
+    clearTimeout(el._animT);
+    el._animT = setTimeout(() => { el.classList.remove('animating'); onResize(); }, 450);
+    panelState[k] = !!collapsed;
+    try { localStorage.setItem(PANELS_KEY, JSON.stringify(panelState)); } catch (e) { /* ignore */ }
+    applyPanels();
+    onResize();
+  }
+  Object.keys(handleEls).forEach((k) => {
+    handleEls[k].addEventListener('click', () => {
+      if (activePointer !== null) return; // a finger is coloring right now: ignore stray taps
+      setPanelCollapsed(k, !panelState[k]);
+    });
+    panelEls[k].addEventListener('transitionend', () => onResize());
+  });
+
   // ---------- Toolbar ----------
   document.getElementById('btnBack').addEventListener('click', goHome);
   document.getElementById('btnUndo').addEventListener('click', undo);
@@ -712,6 +775,7 @@
   // Resize / rotate: only the display size changes (see sizeCanvases); pixels stay untouched.
   let resizeT;
   const onResize = () => {
+    measurePanels();
     if (!studioEl.classList.contains('hidden')) sizeCanvases(); // immediate, no blank frame
     clearTimeout(resizeT);
     resizeT = setTimeout(() => {
@@ -751,6 +815,7 @@
 
   // ---------- Init ----------
   async function init() {
+    applyPanels();
     await loadCustomPages();
     renderCategories();
     renderGallery();
@@ -773,6 +838,8 @@
     get currentPage() { return currentPage; },
     get undoDepth() { return undoStack.length; },
     get backingPx() { return backingPx; },
+    get panels() { return { ...panelState }; },
+    setPanelCollapsed,
     saveProgress,
     colorCanvas,
     lineCanvas
