@@ -351,15 +351,26 @@
   }
 
   // ---------- Canvas sizing & loading ----------
+  // The canvases keep ONE internal resolution for the whole session (the backing store), chosen
+  // from the device's short screen side so it is sharp in both orientations. Rotation/resize only
+  // changes the CSS display size, so colors, lines and undo history are never rescaled or cleared.
+  let backingPx = 0;
+  function chooseBackingPx() {
+    const sw = (window.screen && screen.width) || window.innerWidth;
+    const sh = (window.screen && screen.height) || window.innerHeight;
+    const shortSide = Math.min(sw, sh, Math.max(window.innerWidth, window.innerHeight));
+    const ratio = Math.min(window.devicePixelRatio || 1, 3);
+    return Math.max(MIN_PX, Math.min(MAX_PX, Math.round(shortSide * ratio)));
+  }
   function sizeCanvases() {
     const wrap = canvasWrap.getBoundingClientRect();
     const pad = 16;
-    const side = Math.max(100, Math.min(wrap.width - pad, wrap.height - pad));
+    const side = Math.floor(Math.max(100, Math.min(wrap.width - pad, wrap.height - pad)));
     canvasDisplayW = canvasDisplayH = side;
     dpr = Math.min(window.devicePixelRatio || 1, 3);
-    const px = Math.max(MIN_PX, Math.min(MAX_PX, Math.round(side * dpr)));
+    if (!backingPx) backingPx = chooseBackingPx();
     [colorCanvas, lineCanvas].forEach((c) => {
-      if (c.width !== px) { c.width = px; c.height = px; }
+      if (c.width !== backingPx) { c.width = backingPx; c.height = backingPx; }
       c.style.width = side + 'px';
       c.style.height = side + 'px';
     });
@@ -698,26 +709,18 @@
   });
   document.getElementById('btnConfirmClear').addEventListener('click', doClear);
 
-  // Resize / rotate: keep colors, re-render lines at the new resolution
+  // Resize / rotate: only the display size changes (see sizeCanvases); pixels stay untouched.
   let resizeT;
   const onResize = () => {
+    if (!studioEl.classList.contains('hidden')) sizeCanvases(); // immediate, no blank frame
     clearTimeout(resizeT);
     resizeT = setTimeout(() => {
-      if (!currentPage || !lineImg) return;
-      const snap = document.createElement('canvas');
-      snap.width = colorCanvas.width; snap.height = colorCanvas.height;
-      snap.getContext('2d').drawImage(colorCanvas, 0, 0);
-      const before = colorCanvas.width;
-      sizeCanvases();
-      if (colorCanvas.width !== before) {
-        paintWhite();
-        colorCtx.drawImage(snap, 0, 0, colorCanvas.width, colorCanvas.height);
-        renderLineArt(lineImg);
-        undoStack = [];
-      }
-    }, 120);
+      if (!studioEl.classList.contains('hidden')) sizeCanvases(); // settle after rotation animation
+    }, 150);
   };
   window.addEventListener('resize', onResize);
+  window.addEventListener('orientationchange', onResize);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', onResize);
   if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(canvasWrap);
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden' && currentPage) saveProgress();
@@ -769,6 +772,7 @@
     get tool() { return tool; },
     get currentPage() { return currentPage; },
     get undoDepth() { return undoStack.length; },
+    get backingPx() { return backingPx; },
     saveProgress,
     colorCanvas,
     lineCanvas

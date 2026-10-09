@@ -430,3 +430,92 @@ button {
   .tools .icon-btn { width: 80px; height: 64px; }
   .gallery { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ========== Orientation layouts ========== */
+/* Fill the real visible viewport (Safari toolbars/tab bar shrink it); dvh where supported. */
+#home, #studio { height: 100%; height: 100dvh; }
+/* Safe-area padding on the sides (notch / home indicator in landscape). */
+#home { padding-left: calc(16px + var(--safe-left)); padding-right: calc(16px + var(--safe-right)); }
+#studio { padding-left: var(--safe-left); padding-right: var(--safe-right); }
+
+/* Landscape: tools in a left rail, colors in a scrollable right rail; the canvas gets the full height. */
+@media (orientation: landscape) {
+  #studio { flex-direction: row; padding-bottom: var(--safe-bottom); }
+  .top-bar {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 10px;
+    gap: 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+  }
+  .top-bar::-webkit-scrollbar { display: none; }
+  .tools { flex-direction: column; margin-left: 0; gap: 8px; }
+  .canvas-wrap { min-width: 0; min-height: 0; }
+  .bottom-bar {
+    width: 196px;
+    flex-direction: column;
+    padding: 8px 6px;
+    gap: 4px;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+  /* brush sizes / stickers: one horizontal strip at the top of the rail */
+  .options-row { height: 72px; flex-shrink: 0; }
+  .brush-sizes, .sticker-row { padding: 4px; }
+  .fill-hint { font-size: 30px; }
+  /* colors: a vertical grid that scrolls if the screen is short */
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(2, 60px);
+    justify-content: center;
+    align-content: start;
+    gap: 14px 22px;
+    padding: 12px 8px;
+    flex: 1;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .gallery { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .toast { bottom: calc(24px + var(--safe-bottom)); }
+}
+
+/* Portrait tablets: colors wrap into centered rows instead of scrolling sideways. */
+@media (orientation: portrait) and (min-width: 601px) {
+  .palette { flex-wrap: wrap; justify-content: center; overflow: visible; row-gap: 12px; padding: 10px 14px; }
+}
+
+/* Short landscape (phones on their side, iPad Safari with toolbars): 2-column tool rail, compact home. */
+@media (orientation: landscape) and (max-height: 600px) {
+  :root { --btn: 56px; }
+  .top-bar {
+    display: grid;
+    grid-template-columns: repeat(2, var(--btn));
+    grid-auto-rows: var(--btn);
+    align-content: start;
+    padding: 8px;
+  }
+  .tools { display: contents; }
+  .icon-btn { font-size: 24px; border-radius: 14px; }
+  .bottom-bar { width: 216px; padding: 6px 4px; }
+  .options-row { height: 64px; }
+  .size-btn, .sticker-btn { width: 56px; height: 56px; min-width: 56px; font-size: 28px; }
+  .palette { grid-template-columns: repeat(3, 52px); gap: 12px 14px; padding: 10px 6px; }
+  .swatch { width: 52px; height: 52px; min-width: 52px; border-width: 3px; }
+  #home { padding-top: calc(4px + var(--safe-top)); }
+  .home-header { padding: 2px 0 6px; }
+  .home-header h1 { font-size: 22px; }
+  .home-header .logo { font-size: 28px; }
+  .categories { padding-bottom: 8px; }
+  .cat-btn { min-height: 56px; flex-direction: row; gap: 6px; font-size: 13px; }
+  .cat-btn .emoji { font-size: 22px; }
+  .gallery { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+}
+
+/* Very short landscape (e.g. 1024x350 Safari with tab bar): drop the home title to give the gallery room. */
+@media (orientation: landscape) and (max-height: 400px) {
+  .home-header { display: none; }
+}
