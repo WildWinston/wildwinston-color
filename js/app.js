@@ -112,11 +112,14 @@
     } catch (e) { /* ignore */ }
   }
   function storageKey(pageId) { return STORAGE_PREFIX + pageId; }
+  // Saves are keyed per art version: when a page's line art is replaced (v bumped), old coloring
+  // (which would not line up with the new lines) is ignored instead of being painted underneath.
+  function saveId(page) { return page.v ? page.id + '@v' + page.v : page.id; }
   function hasSaved(pageId) { return !!savedIndex()[pageId]; }
 
   function saveProgress() {
     if (!currentPage) return Promise.resolve();
-    const id = currentPage.id;
+    const id = saveId(currentPage);
     return new Promise((resolve) => {
       colorCanvas.toBlob(async (blob) => {
         try {
@@ -454,7 +457,7 @@
       if (currentPage !== page) return;
       renderLineArt(lineImg);
       let blob = null;
-      try { blob = await idbGet(storageKey(page.id)); } catch (e) { /* no idb */ }
+      try { blob = await idbGet(storageKey(saveId(page))); } catch (e) { /* no idb */ }
       if (blob && currentPage === page) {
         const url = URL.createObjectURL(blob);
         const saved = await loadImage(url);
@@ -579,7 +582,7 @@
       label.className = 'label';
       label.textContent = page.title;
       btn.appendChild(label);
-      if (hasSaved(page.id)) {
+      if (hasSaved(saveId(page))) {
         const badge = document.createElement('span');
         badge.className = 'badge';
         btn.appendChild(badge);

@@ -11,6 +11,12 @@ Open the site in Safari (iPad/iPhone) or Chrome (Android) and use **Add to Home 
 - Undo, Clear (with confirm), Save to Photos (share sheet or download)
 - Autosaves each picture on the device (IndexedDB). Nothing is uploaded.
 
+## Built-in pages
+
+Five packs of 8 pages (Animals, Food, Princess, Things, Vehicles), stored as base64 PNG text in
+`assets-b64/pages__<pack>__<id>.png.b64` and listed in `js/pages.js`. Each page loads only when shown.
+A page's `v` is its art version: bump it when replacing a page's line art so old saved coloring is ignored.
+
 ## Adding a custom page
 
 1. SVG: put it in `custom/` and add `{ "id": "my-page", "title": "Short Name", "file": "my-page.svg" }` to `custom/pages.json`.

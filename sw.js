@@ -1,5 +1,5 @@
 /* Color Time service worker — bump CACHE_VERSION when adding assets */
-const CACHE_VERSION = 'color-v6';
+const CACHE_VERSION = 'color-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -8,23 +8,52 @@ const ASSETS = [
   './js/app.js',
   './manifest.webmanifest',
   './icons/icon.svg',
-  './pages/animals/cat.svg',
-  './pages/animals/dog.svg',
-  './pages/animals/fish.svg',
-  './pages/animals/elephant.svg',
-  './pages/food/apple.svg',
-  './pages/food/banana.svg',
-  './pages/food/strawberry.svg',
-  './pages/food/icecream.svg',
-  './pages/princess/princess.svg',
-  './pages/princess/castle.svg',
-  './pages/princess/crown.svg',
-  './pages/princess/wand.svg',
-  './pages/objects/car.svg',
-  './pages/objects/house.svg',
-  './pages/objects/ball.svg',
-  './pages/objects/rocket.svg',
   './custom/pages.json'
+];
+
+// Built-in page art (base64 PNG text, ~13 KB each). Cached at install but non-fatal, so a flaky
+// download never blocks the app shell; anything missed is cached the first time it is opened.
+const PAGE_ASSETS = [
+  './assets-b64/pages__animals__cat.png.b64',
+  './assets-b64/pages__animals__dog.png.b64',
+  './assets-b64/pages__animals__bunny.png.b64',
+  './assets-b64/pages__animals__lion.png.b64',
+  './assets-b64/pages__animals__elephant.png.b64',
+  './assets-b64/pages__animals__fish.png.b64',
+  './assets-b64/pages__animals__owl.png.b64',
+  './assets-b64/pages__animals__turtle.png.b64',
+  './assets-b64/pages__food__apple.png.b64',
+  './assets-b64/pages__food__banana.png.b64',
+  './assets-b64/pages__food__strawberry.png.b64',
+  './assets-b64/pages__food__icecream.png.b64',
+  './assets-b64/pages__food__cupcake.png.b64',
+  './assets-b64/pages__food__donut.png.b64',
+  './assets-b64/pages__food__pizza.png.b64',
+  './assets-b64/pages__food__watermelon.png.b64',
+  './assets-b64/pages__princess__princess.png.b64',
+  './assets-b64/pages__princess__castle.png.b64',
+  './assets-b64/pages__princess__crown.png.b64',
+  './assets-b64/pages__princess__wand.png.b64',
+  './assets-b64/pages__princess__unicorn.png.b64',
+  './assets-b64/pages__princess__fairy.png.b64',
+  './assets-b64/pages__princess__carriage.png.b64',
+  './assets-b64/pages__princess__dragon.png.b64',
+  './assets-b64/pages__objects__house.png.b64',
+  './assets-b64/pages__objects__ball.png.b64',
+  './assets-b64/pages__objects__rocket.png.b64',
+  './assets-b64/pages__objects__teddy.png.b64',
+  './assets-b64/pages__objects__kite.png.b64',
+  './assets-b64/pages__objects__umbrella.png.b64',
+  './assets-b64/pages__objects__balloons.png.b64',
+  './assets-b64/pages__objects__gift.png.b64',
+  './assets-b64/pages__vehicles__car.png.b64',
+  './assets-b64/pages__vehicles__firetruck.png.b64',
+  './assets-b64/pages__vehicles__bus.png.b64',
+  './assets-b64/pages__vehicles__train.png.b64',
+  './assets-b64/pages__vehicles__airplane.png.b64',
+  './assets-b64/pages__vehicles__helicopter.png.b64',
+  './assets-b64/pages__vehicles__tractor.png.b64',
+  './assets-b64/pages__vehicles__sailboat.png.b64'
 ];
 
 // Files a custom/pages.json list needs offline: plain 'file' images or base64 text chunks ('b64').
@@ -48,6 +77,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_VERSION).then((cache) =>
       cache.addAll(ASSETS)
+        .then(() => Promise.all(PAGE_ASSETS.map((u) => cache.add(u).catch(() => {}))))
         .then(() => cache.match('./custom/pages.json'))
         .then((r) => (r ? r.json() : []))
         .then((list) => cacheCustomAssets(cache, list))
