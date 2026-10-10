@@ -807,7 +807,8 @@
         file: p.file ? 'custom/' + p.file : null,
         b64: p.b64 || null,
         parts: p.parts || 0,
-        mime: p.mime || 'image/png'
+        mime: p.mime || 'image/png',
+        v: p.v || 0 // art version: bump in pages.json when replacing a page's art so old saves are ignored
       }));
       window.COLOR_PAGES.custom.pages = customPages;
     } catch (e) {

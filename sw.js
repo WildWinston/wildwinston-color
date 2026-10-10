@@ -1,5 +1,5 @@
 /* Color Time service worker — bump CACHE_VERSION when adding assets */
-const CACHE_VERSION = 'color-v8';
+const CACHE_VERSION = 'color-v9';
 const ASSETS = [
   './',
   './index.html',
