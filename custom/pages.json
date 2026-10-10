@@ -1,6 +1,6 @@
 [
   { "id": "spidey-ironman", "title": "Spidey & Iron", "b64": "assets-b64/custom__spidey-ironman.png.b64", "parts": 31 },
-  { "id": "spider-hero", "title": "Spider Hero", "b64": "assets-b64/custom__spider-hero.png.b64" },
-  { "id": "spider-dancer", "title": "Spider Dancer", "b64": "assets-b64/custom__spider-dancer.png.b64" },
-  { "id": "spider-girl", "title": "Spider Girl", "b64": "assets-b64/custom__spider-girl.png.b64" }
+  { "id": "spider-hero", "title": "Spider Hero", "b64": "assets-b64/custom__spider-hero.png.b64", "v": 2 },
+  { "id": "spider-dancer", "title": "Spider Dancer", "b64": "assets-b64/custom__spider-dancer.png.b64", "v": 2 },
+  { "id": "spider-girl", "title": "Spider Girl", "b64": "assets-b64/custom__spider-girl.png.b64", "v": 2 }
 ]
