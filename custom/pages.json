@@ -1,6 +1,13 @@
 [
-  { "id": "spidey-ironman", "title": "Spidey & Iron", "b64": "assets-b64/custom__spidey-ironman.png.b64", "parts": 31 },
-  { "id": "spider-hero", "title": "Spider Hero", "b64": "assets-b64/custom__spider-hero.png.b64", "v": 2 },
-  { "id": "spider-dancer", "title": "Spider Dancer", "b64": "assets-b64/custom__spider-dancer.png.b64", "v": 2 },
-  { "id": "spider-girl", "title": "Spider Girl", "b64": "assets-b64/custom__spider-girl.png.b64", "v": 2 }
+  {"id": "spidey-ironman", "title": "Spidey & Iron", "b64": "assets-b64/custom__spidey-ironman.png.b64", "parts": 31},
+  {"id": "spider-hero", "title": "Spider Hero", "b64": "assets-b64/custom__spider-hero.png.b64", "v": 2},
+  {"id": "spider-dancer", "title": "Spider Dancer", "b64": "assets-b64/custom__spider-dancer.png.b64", "v": 2},
+  {"id": "spider-girl", "title": "Spider Girl", "b64": "assets-b64/custom__spider-girl.png.b64", "v": 2},
+  {"id": "spider-dishes", "title": "Spider Dishes", "b64": "assets-b64/custom__spider-dishes.png.b64", "v": 1},
+  {"id": "spider-basketball", "title": "Spider Hoops", "b64": "assets-b64/custom__spider-basketball.png.b64", "v": 1},
+  {"id": "spider-baseball", "title": "Spider Baseball", "b64": "assets-b64/custom__spider-baseball.png.b64", "v": 1},
+  {"id": "princess-snow", "title": "Snow Queen", "b64": "assets-b64/custom__princess-snow.png.b64", "v": 1},
+  {"id": "princess-mermaid", "title": "Mermaid", "b64": "assets-b64/custom__princess-mermaid.png.b64", "v": 1},
+  {"id": "princess-rose", "title": "Rose Princess", "b64": "assets-b64/custom__princess-rose.png.b64", "v": 1},
+  {"id": "princess-slipper", "title": "Glass Slipper", "b64": "assets-b64/custom__princess-slipper.png.b64", "v": 1}
 ]
